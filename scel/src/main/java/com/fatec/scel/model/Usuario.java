@@ -8,7 +8,14 @@ public class Usuario {
 		return ra;
 	}
 
+	/*
+	 * public void setRa(String ra) { this.ra = ra; }
+	 */
+
 	public void setRa(String ra) {
+		if (ra == "" | ra == null) {
+			throw new RuntimeException("RA invalido");
+		}
 		this.ra = ra;
 	}
 
@@ -16,7 +23,14 @@ public class Usuario {
 		return nome;
 	}
 
+	/*
+	 * public void setNome(String nome) { this.nome = nome; }
+	 */
+
 	public void setNome(String nome) {
+		if (nome == "" | nome == null) {
+			throw new RuntimeException("Nome invalido");
+		}
 		this.nome = nome;
 	}
 
