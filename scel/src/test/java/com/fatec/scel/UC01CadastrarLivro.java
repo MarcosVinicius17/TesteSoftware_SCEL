@@ -8,9 +8,9 @@ import com.fatec.scel.model.Livro;
 
 public class UC01CadastrarLivro {
 
-	@Test
-	public void CT01CadastrarLivroComDadosValidos() {
-		try {
+@Test
+public void CT01CadastrarLivroComDadosValidos() {
+	try {
 			// cenario
 			Livro umLivro = new Livro();
 			// acao
