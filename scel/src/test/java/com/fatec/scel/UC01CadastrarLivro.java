@@ -50,4 +50,58 @@ public class UC01CadastrarLivro {
 			assertEquals("ISBN invalido",e.getMessage());
 		}
 	}
+	
+	@Test
+	public void CT04CadastrarLivroComDadosInvalidos() {
+		try {
+			// cenario
+			Livro umLivro = new Livro();
+			// acao
+			umLivro.setIsbn("121212");
+			umLivro.setTitulo(null);
+			umLivro.setAutor("Pressman");
+		} catch (RuntimeException e) {
+			assertEquals("Titulo invalido",e.getMessage());
+		}
+	}
+	@Test
+	public void CT05CadastrarLivroComDadosInvalidos() {
+		try {
+			// cenario
+			Livro umLivro = new Livro();
+			// acao
+			umLivro.setIsbn("121212");
+			umLivro.setTitulo("");
+			umLivro.setAutor("Pressman");
+		} catch (RuntimeException e) {
+			assertEquals("Titulo invalido",e.getMessage());
+		}
+	}
+	@Test
+	public void CT06CadastrarLivroComDadosInvalidos() {
+		try {
+			// cenario
+			Livro umLivro = new Livro();
+			// acao
+			umLivro.setIsbn("121212");
+			umLivro.setTitulo("Engenharia de Software");
+			umLivro.setAutor("");
+		} catch (RuntimeException e) {
+			assertEquals("Autor invalido",e.getMessage());
+		}
+	}
+	@Test
+	public void CT07CadastrarLivroComDadosInvalidos() {
+		try {
+			// cenario
+			Livro umLivro = new Livro();
+			// acao
+			umLivro.setIsbn("121212");
+			umLivro.setTitulo("Engenharia de Software");
+			umLivro.setAutor(null);
+		} catch (RuntimeException e) {
+			assertEquals("Autor invalido",e.getMessage());
+		}
+	}
+	
 }
