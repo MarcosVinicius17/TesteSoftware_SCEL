@@ -8,9 +8,6 @@ public class Usuario {
 		return ra;
 	}
 
-	/*
-	 * public void setRa(String ra) { this.ra = ra; }
-	 */
 
 	public void setRa(String ra) {
 		if (ra == "" | ra == null) {
@@ -22,10 +19,6 @@ public class Usuario {
 	public String getNome() {
 		return nome;
 	}
-
-	/*
-	 * public void setNome(String nome) { this.nome = nome; }
-	 */
 
 	public void setNome(String nome) {
 		if (nome == "" | nome == null) {

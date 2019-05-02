@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-
+import com.fatec.scel.model.Livro;
 import com.fatec.scel.model.Usuario;
 
 public class UC05CadastrarUsuario {
@@ -23,7 +23,7 @@ public class UC05CadastrarUsuario {
 	}
 
 	@Test
-	public void CT02CadastrarUsuarioComDadosInvalidos() {
+	public void CT02CadastrarUsuarioComRAEmBranco() {
 		try {
 			Usuario u = new Usuario();
 			
@@ -35,7 +35,7 @@ public class UC05CadastrarUsuario {
 	}
 	
 	@Test
-	public void CT03CadastrarUsuarioComDadosInvalidos() {
+	public void CT03CadastrarUsuarioComRANulo() {
 		try {
 			Usuario u = new Usuario();
 			
@@ -47,7 +47,7 @@ public class UC05CadastrarUsuario {
 	}
 	
 	@Test
-	public void CT04CadastrarUsuarioComDadosInvalidos() {
+	public void CT04CadastrarUsuarioComNomeEmBranco() {
 		try {
 			Usuario u = new Usuario();
 			
@@ -59,7 +59,7 @@ public class UC05CadastrarUsuario {
 	}
 	
 	@Test
-	public void CT05CadastrarUsuarioComDadosInvalidos() {
+	public void CT05CadastrarUsuarioComNomeNulo() {
 		try {
 			Usuario u = new Usuario();
 			
@@ -69,4 +69,33 @@ public class UC05CadastrarUsuario {
 			assertEquals("Nome invalido", e.getMessage());
 		}
 	}
+	
+	@Test
+	public void CT06CadastrarUsuarioGetRA() {
+		Usuario u = new Usuario();
+		try {
+			u.setNome("Marcos");
+			u.setRa("123123");
+		} catch (RuntimeException e) {
+			fail("nao deve falhar");
+		}
+		
+	assertEquals("Marcos",u.getNome());
+	}	
+	
+	@Test
+	public void CT07CadastrarUsuarioGetRA() {
+		Usuario u = new Usuario();
+		try {
+			u.setNome("Marcos");
+			u.setRa("123123");
+		} catch (RuntimeException e) {
+			fail("nao deve falhar");
+		}
+		
+		assertEquals("123123",u.getRa());
+	}	
+	
+	
+	
 }
