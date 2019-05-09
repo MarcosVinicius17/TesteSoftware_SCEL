@@ -1,145 +1,86 @@
 package com.fatec.scel;
 
-import static org.junit.Assert.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.IntPredicate;
+
+import javax.validation.ConstraintViolationException;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import com.fatec.scel.model.Livro;
+import com.fatec.scel.model.LivroRepository;
+import com.fatec.scel.model.PapelDoUsuario;
+import com.fatec.scel.model.Usuario;
 
+@RunWith(SpringRunner.class)
+@DataJpaTest
 public class UC01CadastrarLivro {
+	@Autowired
+	private LivroRepository livroRepository;
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
+	private Livro livro;
 
-@Test
-public void CT01CadastrarLivroComDadosValidos() {
-	try {
-			// cenario
-			Livro umLivro = new Livro();
-			// acao
-			umLivro.setIsbn("121212");
-			umLivro.setTitulo("Engenharia de Softwar");
-			umLivro.setAutor("Pressman");
-		} catch (RuntimeException e) {
-			// verificacao
-			fail("nao deve falhar");
-		}
+	@Before
+	public void start() {
+		livro = new Livro("1111", "Engenharia de Software", "Pressman");
 	}
-	
-	@Test
-	public void CT02CadastrarLivroComISBNEmBranco() {
-		try {
-			// cenario
-			Livro umLivro = new Livro();
-			// acao
-			umLivro.setIsbn("");
-			umLivro.setTitulo("Engenharia de Softwar");
-			umLivro.setAutor("Pressman");
-		} catch (RuntimeException e) {
-			assertEquals("ISBN invalido",e.getMessage());
-		}
-	}
-	
-	@Test
-	public void CT03CadastrarLivroComISBNNulo() {
-		try {
-			// cenario
-			Livro umLivro = new Livro();
-			// acao
-			umLivro.setIsbn(null);
-			umLivro.setTitulo("Engenharia de Softwar");
-			umLivro.setAutor("Pressman");
-		} catch (RuntimeException e) {
-			assertEquals("ISBN invalido",e.getMessage());
-		}
-	}
-	
-	@Test
-	public void CT04CadastrarLivroComTituloNulo() {
-		try {
-			Livro umLivro = new Livro();
 
-			umLivro.setIsbn("121212");
-			umLivro.setTitulo(null);
-			umLivro.setAutor("Pressman");
-		} catch (RuntimeException e) {
-			assertEquals("Titulo invalido",e.getMessage());
-		}
-	}
 	@Test
-	public void CT05CadastrarLivroComTituloEmBranco() {
-		try {
-			Livro umLivro = new Livro();
+	public void ct01_saveComISBN_NuloDeveLancarException() throws Exception {
+		expectedException.expect(ConstraintViolationException.class);
+		expectedException.expectMessage("O isbn deve ser preenchido");
+		livro.setIsbn(null);
+		livroRepository.save(livro);
+	}
 
-			umLivro.setIsbn("121212");
-			umLivro.setTitulo("");
-			umLivro.setAutor("Pressman");
-		} catch (RuntimeException e) {
-			assertEquals("Titulo invalido",e.getMessage());
-		}
-	}
 	@Test
-	public void CT06CadastrarLivroComAutorEmBranco() {
-		try {
-			Livro umLivro = new Livro();
+	public void ct02_saveComTituloNuloDeveLancarException() throws Exception {
+		expectedException.expect(ConstraintViolationException.class);
+		expectedException.expectMessage("O titulo deve ser preenchido");
+		livro.setTitulo(null);
+		livroRepository.save(livro);
+	}
 
-			umLivro.setIsbn("121212");
-			umLivro.setTitulo("Engenharia de Software");
-			umLivro.setAutor("");
-		} catch (RuntimeException e) {
-			assertEquals("Autor invalido",e.getMessage());
-		}
-	}
 	@Test
-	public void CT07CadastrarLivroComAutorNulo() {
-		try {
-			Livro umLivro = new Livro();
+	public void ct03_saveComTituloBrancoDeveLancarException() throws Exception {
+		expectedException.expect(ConstraintViolationException.class);
+		expectedException.expectMessage("O titulo deve ser preenchido");
+		livro.setTitulo("");
+		livroRepository.save(livro);
+	}
 
-			umLivro.setIsbn("121212");
-			umLivro.setTitulo("Engenharia de Software");
-			umLivro.setAutor(null);
-		} catch (RuntimeException e) {
-			assertEquals("Autor invalido",e.getMessage());
-		}
+	@Test
+	public void ct04_saveComAutorInvalidoSizeDeveLancarException() throws Exception {
+		expectedException.expect(ConstraintViolationException.class);
+		expectedException.expectMessage("Autor deve ter entre 1 e 10 caracteres");
+		livro.setAutor("engenharia dddddd dddddddddddddd");
+		livroRepository.save(livro);
+	}
+
+	@Test
+	public void ct05_saveComAutorInvalidoNuloDeveLancarException() throws Exception {
+		expectedException.expect(ConstraintViolationException.class);
+		expectedException.expectMessage("Autor invalido");
+		livro.setAutor(null);
+		livroRepository.save(livro);
 	}
 	
 	@Test
-	public void CT08CadastrarLivroGetISBN() {
-		Livro umLivro = new Livro();
-		try {
-			umLivro.setIsbn("121212");
-			umLivro.setTitulo("Engenharia de Softwar");
-			umLivro.setAutor("Pressman");
-		} catch (RuntimeException e) {
-			fail("nao deve falhar");
-		}
-		
-	assertEquals("121212",umLivro.getIsbn());
+	public void ct06_save() throws Exception {
+		livroRepository.save(livro);
+		List <Livro> livros = livroRepository.findAll();
+		assertThat(livros.size()).isEqualTo(1L);
 	}
-	
-	@Test
-	public void CT09CadastrarLivroGetTitulo() {
-		Livro umLivro = new Livro();
-		try {
-			umLivro.setIsbn("121212");
-			umLivro.setTitulo("Engenharia de Software");
-			umLivro.setAutor("Pressman");
-		} catch (RuntimeException e) {
-			fail("nao deve falhar");
-		}
-		
-	assertEquals("Engenharia de Software",umLivro.getTitulo());
-	}
-	
-	@Test
-	public void CT10CadastrarLivroGetAutor() {
-		Livro umLivro = new Livro();
-		try {
-			umLivro.setIsbn("121212");
-			umLivro.setTitulo("Engenharia de Software");
-			umLivro.setAutor("Pressman");
-		} catch (RuntimeException e) {
-			fail("nao deve falhar");
-		}
-		
-	assertEquals("Pressman",umLivro.getAutor());
-	}	
-	
+
 }

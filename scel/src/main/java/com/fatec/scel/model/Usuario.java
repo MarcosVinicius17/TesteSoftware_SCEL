@@ -1,51 +1,58 @@
 package com.fatec.scel.model;
 
+import java.util.Set;
+import java.util.UUID;
+import javax.persistence.*;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@Entity
+@Table(name = "Usuario")
 public class Usuario {
-	private String ra;
-	private String nome;
+	@Id
+	private UUID id;
+	@NotEmpty(message = "O email deve ser preenchido")
+	private String email;
+	@Size(min = 1, max = 4, message = "Senha deve ter entre 1 e 4 caracteres")
+	private String password;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	private Set<PapelDoUsuario> papel;
 
-	public String getRa() {
-		return ra;
+	protected Usuario() {
 	}
 
-
-	public void setRa(String ra) {
-		if (ra == "" | ra == null) {
-			throw new RuntimeException("RA invalido");
-		}
-		this.ra = ra;
+	public Usuario(UUID id, String email, String password, Set<PapelDoUsuario> papel) {
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.papel = papel;
 	}
 
-	public String getNome() {
-		return nome;
+	public UUID getId() {
+		return id;
 	}
 
-	public void setNome(String nome) {
-		if (nome == "" | nome == null) {
-			throw new RuntimeException("Nome invalido");
-		}
-		this.nome = nome;
+	public String getEmail() {
+		return email;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Usuario other = (Usuario) obj;
-		if (nome == null) {
-			if (other.nome != null)
-				return false;
-		} else if (!nome.equals(other.nome))
-			return false;
-		if (ra == null) {
-			if (other.ra != null)
-				return false;
-		} else if (!ra.equals(other.ra))
-			return false;
-		return true;
+	public String getPassword() {
+		return password;
+	}
+
+	public Set<PapelDoUsuario> getPapel() {
+		return papel;
+	}
+
+	public String toString() {
+		return getEmail();
 	}
 }
